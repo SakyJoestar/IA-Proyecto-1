@@ -1,12 +1,26 @@
 from Action import Action
 
-class Puzzle (object):
-    def __init__(self, board = [], actualPosition = None, goalPosition = None, size = 0, zero = 0):
+
+class Puzzle(object):
+    def __init__(
+        self,
+        board=[],
+        actualPosition=None,
+        goalPosition=None,
+        size=0,
+        zero=0,
+        power=0,
+        isCostSearch: bool = False,
+        isBreadthSearch: bool = False,
+    ):
         self.board = board
         self.actualPosition = actualPosition
         self.goalPosition = goalPosition
         self.size = size
         self.zero = zero
+        self.power = power
+        self.isCostSearch = isCostSearch
+        self.isBreadthSearch = isBreadthSearch
 
     def __eq__(self, other):
         return self.board == other.board
@@ -15,7 +29,12 @@ class Puzzle (object):
         return hash(str(self.board))
 
     def __str__(self):
-        return '\n'.join([str(self.board[i:i + self.size]) for i in range(0, len(self.board), self.size)])
+        return "\n".join(
+            [
+                str(self.board[i : i + self.size])
+                for i in range(0, len(self.board), self.size)
+            ]
+        )
 
     def __getitem__(self, index):
         return self.board[index]
@@ -24,26 +43,27 @@ class Puzzle (object):
         self.board[index] = value
 
     def loadMap(self, file: str) -> None:
-        with open(file, 'r') as f:
+        with open(file, "r") as f:
             auxMap = f.read().splitlines()
-        mapString = [''.join(fila.split()) for fila in auxMap]
+        mapString = ["".join(fila.split()) for fila in auxMap]
         map = [list(fila) for fila in mapString]
         self.size = len(map)
         self.board = map
         self.definePosition(map)
-    
+
     def definePosition(self, map: list) -> None:
         for i in range(len(map)):
             for j in range(len(map[i])):
-                if map[i][j] == '2':
+                if map[i][j] == "2":
                     self.actualPosition = (i, j)
-                elif map[i][j] == '5':
+                    map[i][j] = "0"
+                elif map[i][j] == "5":
                     self.goalPosition = (i, j)
 
     def isValidPosition(self, row, col, parentPosition) -> bool:
-        isReturnParent = (row, col) == parentPosition
+        isReturnParent = (row, col) == parentPosition and self.power == 0
         isOutOfBoard = row < 0 or row >= self.size or col < 0 or col >= self.size
-        isWall = self.board[row][col] == '1' if not isOutOfBoard else False
+        isWall = self.board[row][col] == "1" if not isOutOfBoard else False
 
         return not isReturnParent and not isOutOfBoard and not isWall
 
@@ -65,8 +85,8 @@ class Puzzle (object):
             return self.isValidPosition(moveRight[0], moveRight[1], parentPosition)
         else:
             return False
-        
-    def move(self, action: Action) -> 'Puzzle':
+
+    def move(self, action: Action) -> "Puzzle":
         y, x = self.actualPosition
 
         if action == Action.UP:
@@ -78,12 +98,40 @@ class Puzzle (object):
         elif action == Action.RIGHT:
             newRow, newCol = y, x + 1
 
-        self.board[y][x] = '0'
-        self.board[newRow][newCol] = '2'
+        cost = self.cost(newRow, newCol) if self.isCostSearch else 0
+
         self.actualPosition = (newRow, newCol)
-        
-    def clone(self) -> 'Puzzle':
-        return Puzzle(self.board[:], self.actualPosition, self.goalPosition, self.size, self.zero)
-    
+
+        return cost
+
+    def clone(self) -> "Puzzle":
+        return Puzzle(
+            self.board[:],
+            self.actualPosition,
+            self.goalPosition,
+            self.size,
+            self.zero,
+            self.power,
+        )
+
     def isGoal(self) -> bool:
         return self.actualPosition == self.goalPosition
+
+    def cost(self, row: int, col: int) -> float:
+        cost = 0
+        if self.power > 0:
+            cost = 0.5
+            self.power -= 1
+            return cost
+
+        if self.board[row][col] == "0":
+            cost = 1
+        if self.board[row][col] == "4":
+            cost = 5
+        if self.board[row][col] == "3":
+            cost = 1
+            self.activePower()
+        return cost
+
+    def activePower(self) -> None:
+        self.power = 10

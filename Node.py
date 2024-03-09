@@ -1,8 +1,11 @@
 from Action import Action
 from Puzzle import Puzzle
 
-class Node (object):
-    def __init__(self, puzzle: Puzzle, action: Action, parent: 'Node', depth: int, cost: int):
+
+class Node(object):
+    def __init__(
+        self, puzzle: Puzzle, action: Action, parent: "Node", depth: int, cost: float
+    ):
         self.puzzle = puzzle
         self.action = action
         self.parent = parent
@@ -11,7 +14,9 @@ class Node (object):
 
     def getPossibleActions(self) -> list[Action]:
         possibleActions = []
-        parentPosition = self.parent.puzzle.actualPosition if self.parent is not None else (-1, -1)
+        parentPosition = (
+            self.parent.puzzle.actualPosition if self.parent is not None else (-1, -1)
+        )
         if self.puzzle.isValidMove(Action.UP, parentPosition):
             possibleActions.append(Action.UP)
         if self.puzzle.isValidMove(Action.DOWN, parentPosition):
@@ -22,11 +27,11 @@ class Node (object):
             possibleActions.append(Action.RIGHT)
 
         return possibleActions
-    
-    def applyAction(self, action: Action) -> 'Node':
+
+    def applyAction(self, action: Action) -> "Node":
         newPuzzle = self.puzzle.clone()
-        newPuzzle.move(action)
-        return Node(newPuzzle, action, self, self.depth + 1, self.cost + 1)
-    
+        cost = newPuzzle.move(action)
+        return Node(newPuzzle, action, self, self.depth + 1, self.cost + cost)
+
     def isGoal(self) -> bool:
         return self.puzzle.isGoal()
