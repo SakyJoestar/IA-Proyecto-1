@@ -1,3 +1,22 @@
+"""
+    Inteligencia Artificial - 750022C 01
+    Proyecto I - Smart Mandalorian
+
+    Autores: 
+    John Freddy Belalcázar Rojas - 2182464
+    Samuel Galindo Cuevas - 2177491
+    Nicolás Herrera Marulanda - 2182551
+    Christian David Vargas Gutiérrez - 2179172
+
+    Profesor:
+    Oscar Bedoya PhD
+
+    Archivo: Puzzle.py
+    Intención:
+    Este archivo define la clase Puzzle, la cual representa el estado del juego.
+    Se encarga de cargar el mapa, definir la posición del jugador y el objetivo, y verificar si una posición es válida.
+"""
+
 from Action import Action
 
 
@@ -5,22 +24,22 @@ class Puzzle(object):
     def __init__(
         self,
         board=[],
-        actualPosition=None,
-        goalPosition=None,
+        current_position=None,
+        goal_position=None,
         size=0,
         zero=0,
         power=0,
-        isCostSearch: bool = False,
-        isBreadthSearch: bool = False,
+        is_cost_search: bool = False,
+        is_breadth_search: bool = False,
     ):
         self.board = board
-        self.actualPosition = actualPosition
-        self.goalPosition = goalPosition
+        self.current_position = current_position
+        self.goal_position = goal_position
         self.size = size
         self.zero = zero
         self.power = power
-        self.isCostSearch = isCostSearch
-        self.isBreadthSearch = isBreadthSearch
+        self.is_cost_search = is_cost_search
+        self.is_breadth_search = is_breadth_search
 
     def __eq__(self, other):
         return self.board == other.board
@@ -29,12 +48,10 @@ class Puzzle(object):
         return hash(str(self.board))
 
     def __str__(self):
-        return "\n".join(
-            [
-                str(self.board[i : i + self.size])
-                for i in range(0, len(self.board), self.size)
-            ]
-        )
+        """
+        Imprime el tablero en un formato fácil de leer.
+        """
+        return str(self.board).replace("],", "]\n")
 
     def __getitem__(self, index):
         return self.board[index]
@@ -42,80 +59,100 @@ class Puzzle(object):
     def __setitem__(self, index, value):
         self.board[index] = value
 
-    def loadMap(self, file: str) -> None:
-        with open(file, "r") as f:
-            auxMap = f.read().splitlines()
-        mapString = ["".join(fila.split()) for fila in auxMap]
-        map = [list(fila) for fila in mapString]
-        self.size = len(map)
-        self.board = map
-        self.definePosition(map)
+    def load_map(self, file: str) -> None:
+        """
+        Carga el mapa desde un archivo de texto.
+        Adicionalmente setea el mapa y el tamaño del mismo (se asume que el mapa es cuadrado)
+        """
+        with open(file, "r") as file:
+            aux_map = file.read().splitlines()
 
-    def definePosition(self, map: list) -> None:
+        map_string = ["".join(fila.split()) for fila in aux_map]
+        map = [list(fila) for fila in map_string]
+        self.board = map
+        self.size = len(map)
+        self.define_position(map)
+
+    def define_position(self, map: list) -> None:
+        """
+        Setea la posición inicial y la posición objetivo del mapa.
+        """
         for i in range(len(map)):
             for j in range(len(map[i])):
                 if map[i][j] == "2":
-                    self.actualPosition = (i, j)
+                    self.current_position = (i, j)
                     map[i][j] = "0"
                 elif map[i][j] == "5":
-                    self.goalPosition = (i, j)
+                    self.goal_position = (i, j)
 
-    def isValidPosition(self, row, col, parentPosition) -> bool:
-        isReturnParent = (row, col) == parentPosition and self.power == 0
-        isOutOfBoard = row < 0 or row >= self.size or col < 0 or col >= self.size
-        isWall = self.board[row][col] == "1" if not isOutOfBoard else False
+    def is_valid_position(self, row, col, parent_position) -> bool:
+        """
+        Verifica si una posición es válida.
+        Para ello verifica que la posición no sea la misma que la del padre, que no esté fuera del tablero y que no sea un muro.
+        """
+        is_its_previous_parent = (row, col) == parent_position and self.power == 0
+        is_out_of_board = row < 0 or row >= self.size or col < 0 or col >= self.size
+        is_wall = self.board[row][col] == "1" if not is_out_of_board else False
 
-        return not isReturnParent and not isOutOfBoard and not isWall
+        return not is_its_previous_parent and not is_out_of_board and not is_wall
 
-    def isValidMove(self, action: Action, parentPosition: tuple[int, int]) -> bool:
-        y, x = self.actualPosition
+    def is_valid_move(self, action: Action, parent_position: tuple[int, int]) -> bool:
+        """
+        Verifica si un movimiento es válido.
+        Para ello verifica si la posición a la que se quiere mover (según la acción) es válida (usando is_valid_position).
+        """
+        y, x = self.current_position
 
-        moveUp = (y - 1, x)
-        moveDown = (y + 1, x)
-        moveLeft = (y, x - 1)
-        moveRight = (y, x + 1)
+        move_up = (y - 1, x)
+        move_down = (y + 1, x)
+        move_left = (y, x - 1)
+        move_right = (y, x + 1)
 
         if action == Action.UP:
-            return self.isValidPosition(moveUp[0], moveUp[1], parentPosition)
+            return self.is_valid_position(move_up[0], move_up[1], parent_position)
         elif action == Action.DOWN:
-            return self.isValidPosition(moveDown[0], moveDown[1], parentPosition)
+            return self.is_valid_position(move_down[0], move_down[1], parent_position)
         elif action == Action.LEFT:
-            return self.isValidPosition(moveLeft[0], moveLeft[1], parentPosition)
+            return self.is_valid_position(move_left[0], move_left[1], parent_position)
         elif action == Action.RIGHT:
-            return self.isValidPosition(moveRight[0], moveRight[1], parentPosition)
+            return self.is_valid_position(move_right[0], move_right[1], parent_position)
         else:
             return False
 
-    def move(self, action: Action) -> "Puzzle":
-        y, x = self.actualPosition
+    def move(self, action: Action) -> float:
+        """
+        Setea la nueva posición del jugador según la acción realizada y retorna el costo asociado a ese movimiento.
+        """
+        y, x = self.current_position
 
         if action == Action.UP:
-            newRow, newCol = y - 1, x
+            new_row, new_col = y - 1, x
         elif action == Action.DOWN:
-            newRow, newCol = y + 1, x
+            new_row, new_col = y + 1, x
         elif action == Action.LEFT:
-            newRow, newCol = y, x - 1
+            new_row, new_col = y, x - 1
         elif action == Action.RIGHT:
-            newRow, newCol = y, x + 1
+            new_row, new_col = y, x + 1
 
-        cost = self.cost(newRow, newCol) if self.isCostSearch else 0
-
-        self.actualPosition = (newRow, newCol)
+        cost = self.cost(new_row, new_col) if self.is_cost_search else 0
+        self.current_position = (new_row, new_col)
 
         return cost
 
     def clone(self) -> "Puzzle":
         return Puzzle(
             self.board[:],
-            self.actualPosition,
-            self.goalPosition,
+            self.current_position,
+            self.goal_position,
             self.size,
             self.zero,
             self.power,
+            self.is_cost_search,
+            self.is_breadth_search
         )
 
-    def isGoal(self) -> bool:
-        return self.actualPosition == self.goalPosition
+    def is_goal(self) -> bool:
+        return self.current_position == self.goal_position
 
     def cost(self, row: int, col: int) -> float:
         cost = 0
@@ -130,8 +167,8 @@ class Puzzle(object):
             cost = 5
         if self.board[row][col] == "3":
             cost = 1
-            self.activePower()
+            self.activate_power()
         return cost
 
-    def activePower(self) -> None:
+    def activate_power(self) -> None:
         self.power = 10

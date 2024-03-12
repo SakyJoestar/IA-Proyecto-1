@@ -1,3 +1,21 @@
+"""
+    Inteligencia Artificial - 750022C 01
+    Proyecto I - Smart Mandalorian
+
+    Autores: 
+    John Freddy Belalcázar Rojas - 2182464
+    Samuel Galindo Cuevas - 2177491
+    Nicolás Herrera Marulanda - 2182551
+    Christian David Vargas Gutiérrez - 2179172
+
+    Profesor:
+    Oscar Bedoya PhD
+
+    Archivo: Node.py
+    Intención:
+    Este archivo define la clase Node, la cual define un nodo en el árbol de búsqueda.
+"""
+
 from Action import Action
 from Puzzle import Puzzle
 
@@ -12,26 +30,33 @@ class Node(object):
         self.depth = depth
         self.cost = cost
 
-    def getPossibleActions(self) -> list[Action]:
-        possibleActions = []
+    def get_possible_actions(self) -> list[Action]:
+        """
+        Devuelve una lista con las acciones posibles que se pueden realizar en el estado actual.
+        Para ello consulta la posición del nodo padre y verifica la posibilidad de moverse en cada una de las direcciones.
+        """
+        possible_actions = []
         parentPosition = (
-            self.parent.puzzle.actualPosition if self.parent is not None else (-1, -1)
+            self.parent.puzzle.current_position if self.parent else (-1, -1)
         )
-        if self.puzzle.isValidMove(Action.UP, parentPosition):
-            possibleActions.append(Action.UP)
-        if self.puzzle.isValidMove(Action.DOWN, parentPosition):
-            possibleActions.append(Action.DOWN)
-        if self.puzzle.isValidMove(Action.LEFT, parentPosition):
-            possibleActions.append(Action.LEFT)
-        if self.puzzle.isValidMove(Action.RIGHT, parentPosition):
-            possibleActions.append(Action.RIGHT)
+        if self.puzzle.is_valid_move(Action.UP, parentPosition):
+            possible_actions.append(Action.UP)
+        if self.puzzle.is_valid_move(Action.DOWN, parentPosition):
+            possible_actions.append(Action.DOWN)
+        if self.puzzle.is_valid_move(Action.LEFT, parentPosition):
+            possible_actions.append(Action.LEFT)
+        if self.puzzle.is_valid_move(Action.RIGHT, parentPosition):
+            possible_actions.append(Action.RIGHT)
 
-        return possibleActions
+        return possible_actions
 
-    def applyAction(self, action: Action) -> "Node":
+    def apply_action(self, action: Action) -> "Node":
+        """
+        Aplica una acción al estado actual y devuelve un nuevo nodo con el estado resultante.
+        """
         newPuzzle = self.puzzle.clone()
         cost = newPuzzle.move(action)
         return Node(newPuzzle, action, self, self.depth + 1, self.cost + cost)
 
-    def isGoal(self) -> bool:
-        return self.puzzle.isGoal()
+    def is_goal(self) -> bool:
+        return self.puzzle.is_goal()
