@@ -17,7 +17,7 @@
     Se encarga de cargar el mapa, definir la posición del jugador y el objetivo, y verificar si una posición es válida.
 """
 
-from Action import Action
+from .Action import Action
 
 
 class Puzzle(object):

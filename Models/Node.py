@@ -16,8 +16,8 @@
     Este archivo define la clase Node, la cual define un nodo en el árbol de búsqueda.
 """
 
-from Action import Action
-from Puzzle import Puzzle
+from .Action import Action
+from .Puzzle import Puzzle
 
 
 class Node(object):

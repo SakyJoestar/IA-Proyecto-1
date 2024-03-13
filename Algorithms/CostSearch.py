@@ -11,16 +11,17 @@
     Profesor:
     Oscar Bedoya PhD
 
-    Archivo: BreadthSearch.py
+    Archivo: CostSearch.py
     Intención:
-    Este archivo define la clase BreadthSearch, la cual representa el algoritmo de búsqueda por amplitud.
-    Este algoritmo se encarga de recorrer el árbol de búsqueda de manera horizontal, es decir, expande todos los nodos del nivel actual antes de pasar al siguiente nivel.
-    Es un algoritmo completo y encuentra la solución óptima si el costo de las acciones es uniforme, 
-    sin embargo, su complejidad en tiempo y espacio es exponencial.
+    Este archivo define la clase CostSearch, la cual representa el algoritmo de búsqueda por costo.
+    Este algoritmo se encarga de expandir el nodo con el menor costo acumulado.
+    Es un algoritmo completo y además encuentra la solución con el menor costo.
+    En el caso promedio, su complejidad temporal ############################ Completar
+    Sin embargo, en su peor caso (cuando el costo de las acciones es el mismo) su complejidad en tiempo y espacio es exponencial.
 """
 
-from Node import Node
-from Puzzle import Puzzle
+from Models.Node import Node
+from Models.Puzzle import Puzzle
 
 
 def path_goal(node):
@@ -35,16 +36,31 @@ def path_goal(node):
     return path
 
 
-def execute_breadth_search():
+def node_of_min_cost(queue_of_nodes):
     """
-    Ejecuta el algoritmo de búsqueda por amplitud.
+    Dada una cola de nodos, devuelve el índice del nodo con el menor costo acumulado.
+    """
+    min_cost = queue_of_nodes[0].cost
+    min_index = 0
+
+    for i in range(1, len(queue_of_nodes)):
+        if queue_of_nodes[i].cost < min_cost:
+            min_cost = queue_of_nodes[i].cost
+            min_index = i
+
+    return min_index
+
+
+def execute_cost_search():
+    """
+    Ejecuta el algoritmo de búsqueda por costo.
     Se basa en una cola de nodos, donde el primer nodo es el nodo raíz (que contiene el estado inicial del juego).
-    Expande el primer nodo y agrega los nodos hijos al final de la cola.
+    Expande el nodo con el menor costo acumulado (cola de prioridad) y agrega los nodos hijos al final de la cola.
     """
     queue_of_nodes = []
     index = 0
 
-    puzzle = Puzzle()
+    puzzle = Puzzle(is_cost_search=True)
     puzzle.load_map("Prueba1.txt")
     initial_node = Node(puzzle, None, None, 0, 0)
 
@@ -55,9 +71,9 @@ def execute_breadth_search():
             print("No solution found")
             break
 
+        index = node_of_min_cost(queue_of_nodes)
         node = queue_of_nodes[index]
         possible_actions = node.get_possible_actions()
-        index += 1
 
         if node.is_goal():
             print("Goal found")
@@ -68,8 +84,10 @@ def execute_breadth_search():
             break
 
         for action in possible_actions:
-            new_node = node.apply_action(action)
-            queue_of_nodes.append(new_node)
+            newNode = node.apply_action(action)
+            queue_of_nodes.append(newNode)
+
+        del queue_of_nodes[index]
 
 
-execute_breadth_search()
+execute_cost_search()
