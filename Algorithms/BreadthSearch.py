@@ -28,14 +28,14 @@ def path_goal(node):
     Dado un nodo, devuelve el camino que lleva a ese nodo hasta el nodo raíz.
     """
     path = []
-    while node.parent != None:
+    while node != None:
         path.append(node.puzzle.current_position)
         node = node.parent
     path.reverse()
     return path
 
 
-def execute_breadth_search():
+def execute_breadth_search(file_path):
     """
     Ejecuta el algoritmo de búsqueda por amplitud.
     Se basa en una cola de nodos, donde el primer nodo es el nodo raíz (que contiene el estado inicial del juego).
@@ -45,7 +45,7 @@ def execute_breadth_search():
     index = 0
 
     puzzle = Puzzle()
-    puzzle.load_map("Prueba1.txt")
+    puzzle.load_map(file_path)
     initial_node = Node(puzzle, None, None, 0, 0)
 
     queue_of_nodes.append(initial_node)
@@ -65,7 +65,7 @@ def execute_breadth_search():
             print("Cost: ", node.cost)
             print("Depht: ", node.depth)
             print("Path: ", path_goal(node))
-            break
+            return path_goal(node)
 
         for action in possible_actions:
             new_node = node.apply_action(action)

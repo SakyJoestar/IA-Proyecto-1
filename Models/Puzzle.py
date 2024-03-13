@@ -18,6 +18,7 @@
 """
 
 from .Action import Action
+from .Reader import Reader
 
 
 class Puzzle(object):
@@ -64,14 +65,9 @@ class Puzzle(object):
         Carga el mapa desde un archivo de texto.
         Adicionalmente setea el mapa y el tamaño del mismo (se asume que el mapa es cuadrado)
         """
-        map = []
-        with open(file, "r") as file:
-            for line in file:
-                map.append(list(line.split()))
-
-        self.board = map
-        self.size = len(map)
-        self.define_position(map)
+        self.board = Reader.read_map(file)
+        self.size = len(self.board)
+        self.define_position(self.board)
 
     def define_position(self, map: list) -> None:
         """

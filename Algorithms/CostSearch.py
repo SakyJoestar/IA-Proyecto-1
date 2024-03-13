@@ -29,7 +29,7 @@ def path_goal(node):
     Dado un nodo, devuelve el camino que lleva a ese nodo hasta el nodo raíz.
     """
     path = []
-    while node.parent != None:
+    while node != None:
         path.append(node.puzzle.current_position)
         node = node.parent
     path.reverse()
@@ -51,7 +51,7 @@ def node_of_min_cost(queue_of_nodes):
     return min_index
 
 
-def execute_cost_search():
+def execute_cost_search(file_path):
     """
     Ejecuta el algoritmo de búsqueda por costo.
     Se basa en una cola de nodos, donde el primer nodo es el nodo raíz (que contiene el estado inicial del juego).
@@ -61,7 +61,7 @@ def execute_cost_search():
     index = 0
 
     puzzle = Puzzle(is_cost_search=True)
-    puzzle.load_map("Prueba1.txt")
+    puzzle.load_map(file_path)
     initial_node = Node(puzzle, None, None, 0, 0)
 
     queue_of_nodes.append(initial_node)
@@ -81,7 +81,7 @@ def execute_cost_search():
             print("Cost: ", node.cost)
             print("Depht: ", node.depth)
             print("Path: ", path_goal(node))
-            break
+            return path_goal(node)
 
         for action in possible_actions:
             newNode = node.apply_action(action)
@@ -89,5 +89,3 @@ def execute_cost_search():
 
         del queue_of_nodes[index]
 
-
-execute_cost_search()
