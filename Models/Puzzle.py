@@ -64,11 +64,11 @@ class Puzzle(object):
         Carga el mapa desde un archivo de texto.
         Adicionalmente setea el mapa y el tamaño del mismo (se asume que el mapa es cuadrado)
         """
+        map = []
         with open(file, "r") as file:
-            aux_map = file.read().splitlines()
+            for line in file:
+                map.append(list(line.split()))
 
-        map_string = ["".join(fila.split()) for fila in aux_map]
-        map = [list(fila) for fila in map_string]
         self.board = map
         self.size = len(map)
         self.define_position(map)
@@ -148,7 +148,7 @@ class Puzzle(object):
             self.zero,
             self.power,
             self.is_cost_search,
-            self.is_breadth_search
+            self.is_breadth_search,
         )
 
     def is_goal(self) -> bool:
