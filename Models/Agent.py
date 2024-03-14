@@ -123,8 +123,10 @@ class Agent:
         Mueve el agente según el camino previamente asignado y
         el estado actual de la animación (definido por index).
         """
-        self.speed_x = 2
-        self.speed_y = 2
+        self.speed_x = 1
+        self.speed_y = 1
+        found_spaceship = False
+        found_enemy = False
 
         action = self.identify_action(map, index)
 
@@ -151,7 +153,13 @@ class Agent:
             if index == len(self.path_to_follow) - 1:
                 map[self.y][self.x] = "0"
 
-        return index
+            if map[self.y][self.x] == "3":
+                found_spaceship = True
+
+            if map[self.y][self.x] == "4":
+                found_enemy = True
+
+        return (index, found_spaceship, found_enemy)
 
     def draw(self, window):
         """
