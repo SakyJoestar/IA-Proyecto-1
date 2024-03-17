@@ -102,3 +102,6 @@ $RECYCLE.BIN/
 
 # PDF files
 *.pdf
+
+# Test files
+test_chris.py
