@@ -53,8 +53,13 @@ class Agent:
     def update_path_to_follow(self, path):
         self.path_to_follow = path
 
-    def update_icon(self, icon):
-        self.icon = icon
+    def update_icons(self, mandalorian_icon, spaceship_icon):
+        self.mandalorian_icon = mandalorian_icon
+        self.spaceship_icon = spaceship_icon
+        self.current_icon = mandalorian_icon
+    
+    def update_current_icon(self, icon):
+        self.current_icon = icon
 
     def update_current_position(
         self,
@@ -81,8 +86,8 @@ class Agent:
         el estado actual de la animación (definido por index).
         """
         (diff_y, diff_x) = (
-            self.path_to_follow[index + 1][0] - self.path_to_follow[index][0],
-            self.path_to_follow[index + 1][1] - self.path_to_follow[index][1],
+            self.path_to_follow[index + 1].y - self.path_to_follow[index].y,
+            self.path_to_follow[index + 1].x - self.path_to_follow[index].x,
         )
 
         if diff_y == 1 and diff_x == 0:
@@ -132,6 +137,11 @@ class Agent:
 
         self.move(action)
 
+        if self.path_to_follow[index].is_in_spaceship:
+            self.current_icon = self.spaceship_icon
+        else:
+            self.current_icon = self.mandalorian_icon
+
         if self.dinamic_x == self.goal_x and self.dinamic_y == self.goal_y:
             self.static_x = self.goal_x
             self.static_y = self.goal_y
@@ -165,4 +175,4 @@ class Agent:
         """
         Dibuja el agente en la ventana.
         """
-        window.blit(self.icon, (self.dinamic_x, self.dinamic_y))
+        window.blit(self.current_icon, (self.dinamic_x, self.dinamic_y))

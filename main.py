@@ -1,9 +1,15 @@
 from Algorithms import *
+from Models import *
+
 
 if __name__ == "__main__":
-    execute_breadth_search("./Prueba1.txt")
+    file_dir = "./Tests/Prueba3.txt"
+    expanded_nodes, depth, total_time, cost, path = execute_cost_search(file_dir)
 
-    print("\n")
+    map = Reader.read_map(file_dir)
 
-    execute_cost_search("./Prueba1.txt")
-    
+    (y, x) = Agent.find_agent(map)
+    agent = Agent(y, x)
+
+    env = Environment(650, 750, map, agent)
+    env.display_environment(expanded_nodes, depth, round(total_time, 6), cost, path)

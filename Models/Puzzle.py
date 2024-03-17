@@ -14,33 +14,30 @@
     Archivo: Puzzle.py
     Intención:
     Este archivo define la clase Puzzle, la cual representa el estado del juego.
-    Se encarga de cargar el mapa, definir la posición del jugador y el objetivo, y verificar si una posición es válida.
+    Se encarga de cargar el mapa, definir la posición del jugador y el objetivo, verificar si una posición es válida
+    y calcular el costo de moverse a una posición en el tablero.
 """
 
+from .Position import Position
 from .Action import Action
 from .Reader import Reader
+from copy import deepcopy
 
 
 class Puzzle(object):
     def __init__(
         self,
         board=[],
-        current_position=None,
+        initial_position=None,
         goal_position=None,
-        size=0,
-        zero=0,
-        power=0,
-        is_cost_search: bool = False,
-        is_breadth_search: bool = False,
+        rows=0,
+        cols=0,
     ):
         self.board = board
-        self.current_position = current_position
+        self.initial_position = initial_position
         self.goal_position = goal_position
-        self.size = size
-        self.zero = zero
-        self.power = power
-        self.is_cost_search = is_cost_search
-        self.is_breadth_search = is_breadth_search
+        self.rows = rows
+        self.cols = cols
 
     def __eq__(self, other):
         return self.board == other.board
@@ -48,17 +45,29 @@ class Puzzle(object):
     def __hash__(self):
         return hash(str(self.board))
 
+    def __getitem__(self, index):
+        return self.board[index]
+
+    def __setitem__(self, index, value):
+        self.board[index] = value
+
     def __str__(self):
         """
         Imprime el tablero en un formato fácil de leer.
         """
         return str(self.board).replace("],", "]\n")
 
-    def __getitem__(self, index):
-        return self.board[index]
-
-    def __setitem__(self, index, value):
-        self.board[index] = value
+    def clone(self) -> "Puzzle":
+        # Para el caso del self.board se debe hacer una copia profunda para que no se modifiquen tableros de otros puzzles,
+        # ya que en Python las listas son pasadas por referencia y al crear una copia sencilla de la lista (self.board.copy() o self.board[:])
+        # igual los objetos internos dentro de la lista siguen guardando la misma referencia.
+        return Puzzle(
+            deepcopy(self.board), 
+            self.initial_position,
+            self.goal_position,
+            self.rows,
+            self.cols,
+        )
 
     def load_map(self, file: str) -> None:
         """
@@ -66,105 +75,51 @@ class Puzzle(object):
         Adicionalmente setea el mapa y el tamaño del mismo (se asume que el mapa es cuadrado)
         """
         self.board = Reader.read_map(file)
-        self.size = len(self.board)
-        self.define_position(self.board)
+        self.rows = len(self.board)
+        self.cols = len(self.board[0])
+        self.define_key_positions(self.board)
 
-    def define_position(self, map: list) -> None:
+    def define_key_positions(self, map: list) -> None:
         """
         Setea la posición inicial y la posición objetivo del mapa.
         """
         for i in range(len(map)):
             for j in range(len(map[i])):
                 if map[i][j] == "2":
-                    self.current_position = (i, j)
+                    self.initial_position = Position(i, j, False)
                     map[i][j] = "0"
                 elif map[i][j] == "5":
-                    self.goal_position = (i, j)
+                    self.goal_position = Position(i, j, False)
 
-    def is_valid_position(self, row, col, parent_position) -> bool:
+    def is_valid_position(self, position) -> bool:
         """
         Verifica si una posición es válida.
-        Para ello verifica que la posición no sea la misma que la del padre, que no esté fuera del tablero y que no sea un muro.
+        Para ello verifica que la posición no esté fuera del tablero y que no sea un muro.
         """
-        is_its_previous_parent = (row, col) == parent_position and self.power == 0
-        is_out_of_board = row < 0 or row >= self.size or col < 0 or col >= self.size
-        is_wall = self.board[row][col] == "1" if not is_out_of_board else False
-
-        return not is_its_previous_parent and not is_out_of_board and not is_wall
-
-    def is_valid_move(self, action: Action, parent_position: tuple[int, int]) -> bool:
-        """
-        Verifica si un movimiento es válido.
-        Para ello verifica si la posición a la que se quiere mover (según la acción) es válida (usando is_valid_position).
-        """
-        y, x = self.current_position
-
-        move_up = (y - 1, x)
-        move_down = (y + 1, x)
-        move_left = (y, x - 1)
-        move_right = (y, x + 1)
-
-        if action == Action.UP:
-            return self.is_valid_position(move_up[0], move_up[1], parent_position)
-        elif action == Action.DOWN:
-            return self.is_valid_position(move_down[0], move_down[1], parent_position)
-        elif action == Action.LEFT:
-            return self.is_valid_position(move_left[0], move_left[1], parent_position)
-        elif action == Action.RIGHT:
-            return self.is_valid_position(move_right[0], move_right[1], parent_position)
-        else:
-            return False
-
-    def move(self, action: Action) -> float:
-        """
-        Setea la nueva posición del jugador según la acción realizada y retorna el costo asociado a ese movimiento.
-        """
-        y, x = self.current_position
-
-        if action == Action.UP:
-            new_row, new_col = y - 1, x
-        elif action == Action.DOWN:
-            new_row, new_col = y + 1, x
-        elif action == Action.LEFT:
-            new_row, new_col = y, x - 1
-        elif action == Action.RIGHT:
-            new_row, new_col = y, x + 1
-
-        cost = self.cost(new_row, new_col) if self.is_cost_search else 0
-        self.current_position = (new_row, new_col)
-
-        return cost
-
-    def clone(self) -> "Puzzle":
-        return Puzzle(
-            self.board[:],
-            self.current_position,
-            self.goal_position,
-            self.size,
-            self.zero,
-            self.power,
-            self.is_cost_search,
-            self.is_breadth_search,
+        is_out_of_board = (
+            position.y < 0
+            or position.y >= self.rows
+            or position.x < 0
+            or position.x >= self.cols
+        )
+        is_wall = (
+            self.board[position.y][position.x] == "1" if not is_out_of_board else False
         )
 
-    def is_goal(self) -> bool:
-        return self.current_position == self.goal_position
+        return not is_out_of_board and not is_wall
 
-    def cost(self, row: int, col: int) -> float:
-        cost = 0
-        if self.power > 0:
-            cost = 0.5
-            self.power -= 1
-            return cost
+    def cost(self, position: Position) -> float:
+        """
+        Devuelve el costo de moverse a una posición en el puzzle.
+        """
+        # Si la posición se alcanza estando en la nave, el costo es 0.5 siempre
+        if position.is_in_spaceship:
+            return 0.5
 
-        if self.board[row][col] == "0":
-            cost = 1
-        if self.board[row][col] == "4":
-            cost = 5
-        if self.board[row][col] == "3":
-            cost = 1
-            self.activate_power()
-        return cost
-
-    def activate_power(self) -> None:
-        self.power = 10
+        # Si no va en la nave y la posición resulta en un enemigo, el costo es 5
+        if self.board[position.y][position.x] == "4":
+            return 5
+        
+        # En cualquier otro caso (se llega a una posición vacía, o se pasa por el punto de inicio
+        # o se llega a la nave, o se llega al objetivo), el costo es 1
+        return 1

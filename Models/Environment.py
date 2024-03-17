@@ -19,7 +19,6 @@
 import pygame
 import os
 import sys
-import time
 
 ruta_actual = os.path.dirname(__file__)
 
@@ -89,7 +88,23 @@ class Environment:
         mandalorian_icon_offset_y = (
             self.rectangle_height - self.mandalorian_icon.get_height()
         ) // 2
-        self.agent.update_icon(self.mandalorian_icon)
+
+        # Spaceship
+        self.spaceship_icon = pygame.image.load(
+            os.path.join(ruta_actual, "../Static/Spaceship.png")
+        )
+        self.spaceship_icon = pygame.transform.scale(
+            self.spaceship_icon,
+            (self.rectangle_width * 0.7, self.rectangle_height * 0.4),
+        )
+        self.spaceship_icon_offset_x = (
+            self.rectangle_width - self.spaceship_icon.get_width()
+        ) // 2
+        self.spaceship_icon_offset_y = (
+            self.rectangle_height - self.spaceship_icon.get_height()
+        ) // 2
+
+        self.agent.update_icons(self.mandalorian_icon, self.spaceship_icon)
         self.agent.update_current_position(
             self.rectangle_width,
             self.rectangle_height,
@@ -127,21 +142,6 @@ class Environment:
         ) // 2
         self.mandalorian_grogu_icon_offset_y = (
             self.rectangle_height - self.mandalorian_grogu_icon.get_height()
-        ) // 2
-
-        # Spaceship
-        self.spaceship_icon = pygame.image.load(
-            os.path.join(ruta_actual, "../Static/Spaceship.png")
-        )
-        self.spaceship_icon = pygame.transform.scale(
-            self.spaceship_icon,
-            (self.rectangle_width * 0.7, self.rectangle_height * 0.4),
-        )
-        self.spaceship_icon_offset_x = (
-            self.rectangle_width - self.spaceship_icon.get_width()
-        ) // 2
-        self.spaceship_icon_offset_y = (
-            self.rectangle_height - self.spaceship_icon.get_height()
         ) // 2
 
         # Enemy
@@ -265,7 +265,7 @@ class Environment:
         Despliega las estadísticas del algoritmo en la ventana de juego.
         """
         self.title = self.font_title_1.render("Smart Mandalorian", True, (0, 0, 0))
-        
+
         self.stats_title = self.font_title_2.render(
             "Estadísticas del algoritmo", True, (0, 0, 0)
         )
@@ -289,12 +289,8 @@ class Environment:
             str(time_elapsed), True, (0, 0, 0)
         )
 
-        self.cost = self.font_subtitle.render(
-            "Costo de la solución: ", True, (0, 0, 0)
-        )
-        self.cost_value = self.font_body.render(
-            str(cost), True, (0, 0, 0)
-        )
+        self.cost = self.font_subtitle.render("Costo de la solución: ", True, (0, 0, 0))
+        self.cost_value = self.font_body.render(str(cost), True, (0, 0, 0))
 
         self.window.blit(
             self.title,
@@ -344,7 +340,6 @@ class Environment:
             ),
         )
 
-
         self.window.blit(
             self.time_elapsed,
             (
@@ -356,7 +351,7 @@ class Environment:
         self.window.blit(
             self.time_elapsed_value,
             (
-                self.width * 0.5 + self.time_elapsed.get_width()  // 2,
+                self.width * 0.5 + self.time_elapsed.get_width() // 2,
                 self.height - self.bottom_margin * 0.3,
             ),
         )
@@ -377,7 +372,7 @@ class Environment:
             ),
         )
 
-    def display_environment(self, path: list):
+    def display_environment(self, expanded_nodes, tree_depth, time_elapsed, cost, path):
         """
         Controlador general de la ventana de juego.
         Despliega la interfaz inicial y después ejecuta la animación del juego, según el camino encontrado por el algoritmo previamente seleccionado y ejecutado.
@@ -387,11 +382,6 @@ class Environment:
         found_spaceship = False
         found_enemy = False
 
-        nodes_expanded = 100
-        tree_depth = 100
-        time_elapsed = 100
-        cost = 100
-
         while True:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
@@ -399,11 +389,11 @@ class Environment:
 
             # Dibuja el tablero y las estadísticas del algoritmo
             self.draw_board()
-            self.print_stats(nodes_expanded, tree_depth, time_elapsed, cost)
+            self.print_stats(expanded_nodes, tree_depth, time_elapsed, cost)
 
             # Verifica si el agente ha llegado a la meta
             if index == len(path) - 1:
-                self.agent.update_icon(self.mandalorian_grogu_icon)
+                self.agent.update_current_icon(self.mandalorian_grogu_icon)
                 self.agent.draw(self.window)
                 pygame.display.flip()
                 self.win_sound.play()
