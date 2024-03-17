@@ -79,6 +79,7 @@ def execute_cost_search(file_path):
         index = node_of_min_cost(queue_of_nodes)
         node = queue_of_nodes[index]
         possible_actions = node.get_possible_actions()
+        expanded_nodes += 1
 
         if node.is_goal():
             end_time = time.time()
@@ -92,13 +93,11 @@ def execute_cost_search(file_path):
             print("Cost: ", node.cost)
             print("Path: ")
             Position.print_list_of_positions(path)
-            
+
             return (expanded_nodes, node.depth, total_time, node.cost, path)
 
         for action in possible_actions:
             new_node = node.apply_action(action)
             queue_of_nodes.append(new_node)
-            expanded_nodes += 1
 
         del queue_of_nodes[index]
-
