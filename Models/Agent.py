@@ -57,7 +57,7 @@ class Agent:
         self.mandalorian_icon = mandalorian_icon
         self.spaceship_icon = spaceship_icon
         self.current_icon = mandalorian_icon
-    
+
     def update_current_icon(self, icon):
         self.current_icon = icon
 
@@ -159,14 +159,18 @@ class Agent:
                 self.x -= 1
 
             index += 1
-            
+
             if index == len(self.path_to_follow) - 1:
                 map[self.y][self.x] = "0"
 
             if map[self.y][self.x] == "3":
                 found_spaceship = True
 
-            if map[self.y][self.x] == "4":
+            if (
+                map[self.y][self.x] == "4"
+                and not self.path_to_follow[index].is_in_spaceship
+                and not self.path_to_follow[index - 1].is_in_spaceship
+            ):
                 found_enemy = True
 
         return (index, found_spaceship, found_enemy)

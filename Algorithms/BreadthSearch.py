@@ -54,15 +54,16 @@ def execute_breadth_search(file_path):
 
     queue_of_nodes.append(initial_node)
     start_time = time.time()
-    
+
     while True:
         if index >= len(queue_of_nodes):
             print("No solution found")
             break
-        
+
         node = queue_of_nodes[index]
         possible_actions = node.get_possible_actions()
         index += 1
+        expanded_nodes += 1
 
         if node.is_goal():
             end_time = time.time()
@@ -82,5 +83,3 @@ def execute_breadth_search(file_path):
         for action in possible_actions:
             new_node = node.apply_action(action)
             queue_of_nodes.append(new_node)
-            expanded_nodes += 1
-
