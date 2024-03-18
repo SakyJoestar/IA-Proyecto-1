@@ -3,8 +3,8 @@ from Models import *
 
 
 if __name__ == "__main__":
-    file_dir = "./Tests/Prueba3.txt"
-    expanded_nodes, depth, total_time, cost, path = execute_cost_search(file_dir)
+    file_dir = "./Tests/Prueba1.txt"
+    expanded_nodes, depth, total_time, cost, path = execute_depth_search(file_dir)
 
     map = Reader.read_map(file_dir)
 

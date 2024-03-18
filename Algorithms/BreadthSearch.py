@@ -25,18 +25,6 @@ from Models import Position
 import time
 
 
-def path_goal(node):
-    """
-    Dado un nodo, devuelve el camino que lleva a ese nodo hasta el nodo raíz.
-    """
-    path = []
-    while node != None:
-        path.append(node.position)
-        node = node.parent
-    path.reverse()
-    return path
-
-
 def execute_breadth_search(file_path):
     """
     Ejecuta el algoritmo de búsqueda por amplitud.
@@ -50,7 +38,7 @@ def execute_breadth_search(file_path):
     puzzle = Puzzle()
     puzzle.load_map(file_path)
     initial_position = puzzle.initial_position
-    initial_node = Node(puzzle, initial_position, 0, 0, None, 0, None)
+    initial_node = Node(puzzle, initial_position, 0, 0, 0, None, None)
 
     queue_of_nodes.append(initial_node)
     start_time = time.time()
@@ -61,14 +49,12 @@ def execute_breadth_search(file_path):
             break
 
         node = queue_of_nodes[index]
-        possible_actions = node.get_possible_actions()
         index += 1
-        expanded_nodes += 1
 
         if node.is_goal():
             end_time = time.time()
             total_time = end_time - start_time
-            path = path_goal(node)
+            path = node.get_path_from_root_to_node()
 
             print("Goal found: ", node.position)
             print("Expanded nodes: ", expanded_nodes)
@@ -79,6 +65,9 @@ def execute_breadth_search(file_path):
             Position.print_list_of_positions(path)
 
             return (expanded_nodes, node.depth, total_time, node.cost, path)
+
+        possible_actions = node.get_possible_actions()
+        expanded_nodes += 1
 
         for action in possible_actions:
             new_node = node.apply_action(action)
