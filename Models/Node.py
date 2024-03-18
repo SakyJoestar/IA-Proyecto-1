@@ -28,17 +28,19 @@ class Node(object):
         position: Position,
         fuel: int,
         cost: float,
-        parent: "Node",
         depth: int,
         action: Action,
+        parent: "Node",
+        number_of_children: int = 0,
     ):
         self.puzzle = puzzle
         self.position = position
         self.fuel = fuel
         self.cost = cost
-        self.parent = parent
         self.depth = depth
         self.action = action
+        self.parent = parent
+        self.number_of_children = number_of_children
 
     def __str__(self):
         return f"Posición: {self.position}, combustible: {self.fuel}, costo: {self.cost}, profundidad: {self.depth}, acción: {self.action}"
@@ -157,7 +159,7 @@ class Node(object):
             new_puzzle.board[new_position.y][new_position.x] = "0"
 
         return Node(
-            new_puzzle, new_position, new_fuel, new_cost, self, self.depth + 1, action
+            new_puzzle, new_position, new_fuel, new_cost, self.depth + 1, action, self
         )
 
     def is_goal(self) -> bool:
@@ -165,3 +167,25 @@ class Node(object):
             self.position.x == self.puzzle.goal_position.x
             and self.position.y == self.puzzle.goal_position.y
         )
+
+    def get_path_from_root_to_node(self) -> list[Position]:
+        """
+        Dado un nodo, devuelve el camino desde la raíz hasta el nodo.
+        """
+        path = []
+        node = self
+        while node != None:
+            path.append(node.position)
+            node = node.parent
+        path.reverse()
+        return path
+
+    def verify_node_and_ancestors_to_free_memory(self):
+        """
+        Verifica si los nodos a lo largo de una rama ya no tienen hijos que expandir, en cuyo caso se setean a None
+        con el fin de liberar memoria.
+        """
+        if self.number_of_children == 0:
+            self.parent.number_of_children -= 1
+            self.parent.verify_node_and_ancestors_to_free_memory()
+            self = None
