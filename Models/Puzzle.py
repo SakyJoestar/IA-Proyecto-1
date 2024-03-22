@@ -123,3 +123,9 @@ class Puzzle(object):
         # En cualquier otro caso (se llega a una posición vacía, o se pasa por el punto de inicio
         # o se llega a la nave, o se llega al objetivo), el costo es 1
         return 1
+    
+    def heuristic(self, position: Position) -> float:
+        """
+        Devuelve el costo heurístico de moverse a una posición en el puzzle.
+        """
+        return abs(position.x - self.goal_position.x) + abs(position.y - self.goal_position.y)

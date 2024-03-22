@@ -31,6 +31,7 @@ class Node(object):
         depth: int,
         action: Action,
         parent: "Node",
+        heuristic: float = 0,
         number_of_children: int = 0,
     ):
         self.puzzle = puzzle
@@ -40,6 +41,7 @@ class Node(object):
         self.depth = depth
         self.action = action
         self.parent = parent
+        self.heuristic = heuristic
         self.number_of_children = number_of_children
 
     def __str__(self):
@@ -139,6 +141,7 @@ class Node(object):
 
         # Calcula el costo del movimiento antes de haber cambiado cualquier estado sobre el puzzle.
         new_cost = self.cost + new_puzzle.cost(new_position)
+        new_heuristic = new_puzzle.heuristic(new_position)
 
         # Verificar si va en la nave, y por lo tanto el combustible disminuye.
         if self.position.is_in_spaceship:
@@ -159,7 +162,7 @@ class Node(object):
             new_puzzle.board[new_position.y][new_position.x] = "0"
 
         return Node(
-            new_puzzle, new_position, new_fuel, new_cost, self.depth + 1, action, self
+            new_puzzle, new_position, new_fuel, new_cost, self.depth + 1, action, self, heuristic=new_heuristic
         )
 
     def is_goal(self) -> bool:

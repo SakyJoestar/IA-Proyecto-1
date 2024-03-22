@@ -20,7 +20,11 @@ import pygame
 import os
 import sys
 
-ruta_actual = os.path.dirname(__file__)
+actual_path = os.path.dirname(__file__)
+font_title_path = os.path.join(actual_path, "../Static/Fonts/Starjedi.ttf")
+font_title_2_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Bold.ttf")
+font_subtitle_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Regular.ttf")
+font_body_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Thin.ttf")
 
 
 class Environment:
@@ -52,10 +56,10 @@ class Environment:
         )
 
         pygame.font.init()
-        self.font_title_1 = pygame.font.Font(pygame.font.get_default_font(), 32)
-        self.font_title_2 = pygame.font.Font(pygame.font.get_default_font(), 28)
-        self.font_subtitle = pygame.font.Font(pygame.font.get_default_font(), 14)
-        self.font_body = pygame.font.Font(pygame.font.get_default_font(), 12)
+        self.font_title_1 = pygame.font.Font(font_title_path, 32)
+        self.font_title_2 = pygame.font.Font(font_title_2_path, 28)
+        self.font_subtitle = pygame.font.Font(font_subtitle_path, 14)
+        self.font_body = pygame.font.Font(font_body_path, 12)
 
         self.background_color = (165, 201, 202)
         self.wall_color = (107, 132, 139)
@@ -76,7 +80,7 @@ class Environment:
         """
         # Mandalorian
         self.mandalorian_icon = pygame.image.load(
-            os.path.join(ruta_actual, "../Static/Mandalorian.png")
+            os.path.join(actual_path, "../Static/Mandalorian.png")
         )
         self.mandalorian_icon = pygame.transform.scale(
             self.mandalorian_icon,
@@ -91,7 +95,7 @@ class Environment:
 
         # Spaceship
         self.spaceship_icon = pygame.image.load(
-            os.path.join(ruta_actual, "../Static/Spaceship.png")
+            os.path.join(actual_path, "../Static/Spaceship.png")
         )
         self.spaceship_icon = pygame.transform.scale(
             self.spaceship_icon,
@@ -116,7 +120,7 @@ class Environment:
 
         # Grogu
         self.grogu_icon = pygame.image.load(
-            os.path.join(ruta_actual, "../Static/Grogu.png")
+            os.path.join(actual_path, "../Static/Grogu.png")
         )
         self.grogu_icon = pygame.transform.scale(
             self.grogu_icon,
@@ -131,7 +135,7 @@ class Environment:
 
         # Mandalorian y Grogu
         self.mandalorian_grogu_icon = pygame.image.load(
-            os.path.join(ruta_actual, "../Static/Mandalorian_with_grogu.jpg")
+            os.path.join(actual_path, "../Static/Mandalorian_with_grogu.jpg")
         )
         self.mandalorian_grogu_icon = pygame.transform.scale(
             self.mandalorian_grogu_icon,
@@ -146,7 +150,7 @@ class Environment:
 
         # Enemy
         self.enemy_icon = pygame.image.load(
-            os.path.join(ruta_actual, "../Static/Enemy.png")
+            os.path.join(actual_path, "../Static/Enemy.png")
         )
         self.enemy_icon = pygame.transform.scale(
             self.enemy_icon, (self.rectangle_width * 0.4, self.rectangle_height * 0.7)
@@ -163,20 +167,20 @@ class Environment:
         Carga la música de fondo del juego.
         """
         self.main_theme = pygame.mixer.Sound(
-            os.path.join(ruta_actual, "../Static/Sounds/main_theme.mp3")
+            os.path.join(actual_path, "../Static/Sounds/main_theme.mp3")
         )
 
         self.win_sound = pygame.mixer.Sound(
-            os.path.join(ruta_actual, "../Static/Sounds/win.mp3")
+            os.path.join(actual_path, "../Static/Sounds/win.mp3")
         )
 
         self.spaceship_sound = pygame.mixer.Sound(
-            os.path.join(ruta_actual, "../Static/Sounds/spaceship.mp3")
+            os.path.join(actual_path, "../Static/Sounds/spaceship.mp3")
         )
         self.spaceship_sound_length = int(self.spaceship_sound.get_length())
 
         self.enemy_sound = pygame.mixer.Sound(
-            os.path.join(ruta_actual, "../Static/Sounds/lightsaber.wav")
+            os.path.join(actual_path, "../Static/Sounds/lightsaber.wav")
         )
         self.enemy_sound_length = int(self.enemy_sound.get_length())
 

@@ -11,25 +11,41 @@
     Profesor:
     Oscar Bedoya PhD
 
-    Archivo: BreadthSearch.py
+    Archivo: AStarSearch.py
     Intención:
-    Este archivo define la clase BreadthSearch, la cual representa el algoritmo de búsqueda por amplitud.
-    Este algoritmo se encarga de recorrer el árbol de búsqueda de manera horizontal, es decir, expande todos los nodos del nivel actual antes de pasar al siguiente nivel.
-    Es un algoritmo completo y encuentra la solución óptima si el costo de las acciones es uniforme, 
-    sin embargo, su complejidad en tiempo y espacio es exponencial.
+    Este archivo define la clase AStarSearch, la cual representa el algoritmo de búsqueda A*.
+    Este algoritmo se encarga de expandir el nodo con el menor costo acumulado y la menor heurística.
+    Es un algoritmo completo y además encuentra la solución con el menor costo.
+    En el caso promedio, su complejidad temporal ############################ Completar
+    Sin embargo, en su peor caso (cuando el costo de las acciones es el mismo) su complejidad en tiempo y espacio es exponencial.
 """
 
-from Models import Node
-from Models import Puzzle
-from Models import Position
+from Models.Node import Node
+from Models.Puzzle import Puzzle
+import Models.Position as Position
 import time
 
 
-def execute_breadth_search(file_path: str):
+def node_of_min_heuristic_and_cost(queue_of_nodes: list[Node]):
     """
-    Ejecuta el algoritmo de búsqueda por amplitud.
+    Dada una cola de nodos, devuelve el índice del nodo con el menor costo acumulado y la menor heurística.
+    """
+    min_heuristic_and_cost = queue_of_nodes[0].heuristic + queue_of_nodes[0].cost
+    min_index = 0
+
+    for i in range(1, len(queue_of_nodes)):
+        if (queue_of_nodes[i].heuristic + queue_of_nodes[0].cost) < min_heuristic_and_cost:
+            min_heuristic_and_cost = queue_of_nodes[i].heuristic + queue_of_nodes[0].cost
+            min_index = i
+
+    return min_index
+
+
+def execute_astar_search(file_path: str):
+    """
+    Ejecuta el algoritmo de búsqueda A*.
     Se basa en una cola de nodos, donde el primer nodo es el nodo raíz (que contiene el estado inicial del juego).
-    Expande el primer nodo y agrega los nodos hijos al final de la cola.
+    Expande el nodo con el menor costo acumulado y la menor heurística (cola de prioridad) y agrega los nodos hijos al final de la cola.
     """
     queue_of_nodes = []
     index = 0
@@ -48,8 +64,8 @@ def execute_breadth_search(file_path: str):
             print("No solution found")
             break
 
+        index = node_of_min_heuristic_and_cost(queue_of_nodes)
         node = queue_of_nodes[index]
-        index += 1
 
         if node.is_goal():
             end_time = time.time()
@@ -72,3 +88,5 @@ def execute_breadth_search(file_path: str):
         for action in possible_actions:
             new_node = node.apply_action(action)
             queue_of_nodes.append(new_node)
+
+        del queue_of_nodes[index]
