@@ -1,15 +1,12 @@
-from Algorithms import *
 from Models import *
 
+from PyQt5.QtWidgets import QApplication
+import sys
 
 if __name__ == "__main__":
-    file_dir = "./Tests/Prueba1.txt"
-    expanded_nodes, depth, total_time, cost, path = execute_astar_search(file_dir)
 
-    map = Reader.read_map(file_dir)
-
-    (y, x) = Agent.find_agent(map)
-    agent = Agent(y, x)
-
-    env = Environment(650, 750, map, agent)
-    env.display_environment(expanded_nodes, depth, round(total_time, 6), cost, path)
+    app = QApplication(sys.argv)
+    app.setStyle('Fusion')
+    ui = UI()
+    ui.show()
+    sys.exit(app.exec_()) 
