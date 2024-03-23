@@ -60,7 +60,7 @@ class Puzzle(object):
     def clone(self) -> "Puzzle":
         # Para el caso del self.board se debe hacer una copia profunda para que no se modifiquen tableros de otros puzzles,
         # ya que en Python las listas son pasadas por referencia y al crear una copia sencilla de la lista (self.board.copy() o self.board[:])
-        # igual los objetos internos dentro de la lista siguen guardando la misma referencia.
+        # los objetos internos dentro de la lista siguen guardando la misma referencia.
         return Puzzle(
             deepcopy(self.board), 
             self.initial_position,
