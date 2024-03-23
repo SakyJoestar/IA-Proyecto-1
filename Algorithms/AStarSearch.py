@@ -13,17 +13,19 @@
 
     Archivo: AStarSearch.py
     Intención:
-    Este archivo define la clase AStarSearch, la cual representa el algoritmo de búsqueda A*.
-    Este algoritmo se encarga de expandir el nodo con el menor costo acumulado y la menor heurística.
-    Es un algoritmo completo y además encuentra la solución con el menor costo.
-    En el caso promedio, su complejidad temporal ############################ Completar
-    Sin embargo, en su peor caso (cuando el costo de las acciones es el mismo) su complejidad en tiempo y espacio es exponencial.
+    Este archivo define la función execute_astar_search, la cual representa el algoritmo de búsqueda A*.
+    Este algoritmo se encarga de expandir el nodo el menor valor f(n) = g(n) + h(n), donde g(n) es el costo acumulado del nodo
+    y h(n) es el valor de la heurística.
+    Como este algoritmo tiene en cuenta el costo acumulado del nodo, entonces nunca se queda atrapado en ciclos por lo tanto es 
+    completo. Además si la función heurística es admisible, entonces A* siempre encuentra la solución óptima.
+    Su costo temporal y espacial está definido en términos de la cantidad de nodos que se deben expandir,
+    que en este caso corresponden al número de nodos con valor f(n) menor al de la solución óptima.
 """
 
 from Models.Node import Node
 from Models.Puzzle import Puzzle
 import Models.Position as Position
-import time
+import timeit
 
 
 def node_of_min_heuristic_and_cost(queue_of_nodes: list[Node]):
@@ -57,7 +59,7 @@ def execute_astar_search(file_path: str):
     initial_node = Node(puzzle, initial_position, 0, 0, 0, None, None)
 
     queue_of_nodes.append(initial_node)
-    start_time = time.time()
+    start_time = timeit.default_timer()
 
     while True:
         if index >= len(queue_of_nodes):
@@ -68,7 +70,7 @@ def execute_astar_search(file_path: str):
         node = queue_of_nodes[index]
 
         if node.is_goal():
-            end_time = time.time()
+            end_time = timeit.default_timer()
             total_time = end_time - start_time
             path = node.get_path_from_root_to_node()
 

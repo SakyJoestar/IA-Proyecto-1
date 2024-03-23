@@ -44,7 +44,7 @@ class Agent:
         self.goal_y = y
         self.goal_x = x
 
-        # Tamaño de cada rectangulo en la cuadrícula, para efectos de ajustar la posición del agente en la ventana
+        # Tamaño de cada rectángulo en la cuadrícula, para efectos de ajustar la posición del agente en la ventana
         self.rectangle_width = 0
         self.rectangle_height = 0
 

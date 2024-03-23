@@ -13,18 +13,19 @@
 
     Archivo: DepthSearch.py
     Intención:
-    Este archivo define la clase CostSearch, la cual representa el algoritmo de búsqueda por profundidad.
+    Este archivo define la función execute_depth_search, la cual representa el algoritmo de búsqueda por profundidad.
     Este algoritmo se encarga de expandir el nodo más profundo en el árbol de búsqueda.
     En principio este no es un algoritmo completo, pero como intencionalmente se evitan los ciclos
     (pasar por posiciones previamente visitadas), entonces se garantiza que el algoritmo es completo.
     En el peor de los casos su complejidad temporal es exponencial, aunque la complejidad en espacio siempre es
-    proporcional a la profundidad * el factor de ramificación.
+    proporcional a la profundidad * el factor de ramificación. Es debido a esta reducción en la complejidad espacial
+    que el algoritmo de búsqueda por profundidad es preferido sobre la búsqueda por amplitud.
 """
 
 from Models.Node import Node
 from Models.Puzzle import Puzzle
 from Models.Position import Position
-import time
+import timeit
 
 
 def execute_depth_search(file_path: str):
@@ -50,7 +51,7 @@ def execute_depth_search(file_path: str):
     initial_node = Node(puzzle, initial_position, 0, 0, 0, None, None, 0)
 
     stack_of_nodes.append(initial_node)
-    start_time = time.time()
+    start_time = timeit.default_timer()
 
     while True:
         if len(stack_of_nodes) == 0:
@@ -61,7 +62,7 @@ def execute_depth_search(file_path: str):
         expanded_nodes += 1
 
         if node.is_goal():
-            end_time = time.time()
+            end_time = timeit.default_timer()
             total_time = end_time - start_time
             path = node.get_path_from_root_to_node()
 

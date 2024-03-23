@@ -13,17 +13,21 @@
 
     Archivo: greedySearch.py
     Intención:
-    Este archivo define la función execute_greedy_search, la cual representa el algoritmo de búsqueda greedy.
-    Este algoritmo se encarga de expandir el nodo con la menor heurística.
-    Es un algoritmo completo y además encuentra la solución con el menor costo.
-    En el caso promedio, su complejidad temporal ############################ Completar
-    Sin embargo, en su peor caso (cuando el costo de las acciones es el mismo) su complejidad en tiempo y espacio es exponencial.
+    Este archivo define la función execute_greedy_search, la cual representa el algoritmo de búsqueda voraz.
+    Este algoritmo se encarga de expandir el nodo con el menor valor dado por la heurística.
+    En principio este no es un algoritmo completo, pero como intencionalmente se evitan los ciclos
+    (pasar por posiciones previamente visitadas), entonces se garantiza que el algoritmo es completo.
+    A diferencia del algoritmo de búsqueda por profundidad, la solución de este algoritmo no depende del orden de aplicación
+    de los operadores, sino que depende exclusivamente de la función heurística utilizada.
+    No obtiene una solución óptima, y su complejidad en tiempo y espacio es exponencial.
+
+    
 """
 
 from Models.Node import Node
 from Models.Puzzle import Puzzle
 import Models.Position as Position
-import time
+import timeit
 
 
 def node_of_min_heuristic(queue_of_nodes: list[Node]):
@@ -57,7 +61,7 @@ def execute_greedy_search(file_path: str):
     initial_node = Node(puzzle, initial_position, 0, 0, 0, None, None)
 
     queue_of_nodes.append(initial_node)
-    start_time = time.time()
+    start_time = timeit.default_timer()
 
     while True:
         if index >= len(queue_of_nodes):
@@ -68,7 +72,7 @@ def execute_greedy_search(file_path: str):
         node = queue_of_nodes[index]
 
         if node.is_goal():
-            end_time = time.time()
+            end_time = timeit.default_timer()
             total_time = end_time - start_time
             path = node.get_path_from_root_to_node()
 

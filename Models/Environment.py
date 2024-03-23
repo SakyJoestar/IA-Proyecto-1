@@ -20,11 +20,11 @@ import pygame
 import os
 import sys
 
-actual_path = os.path.dirname(__file__)
-font_title_path = os.path.join(actual_path, "../Static/Fonts/Starjedi.ttf")
-font_title_2_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Bold.ttf")
-font_subtitle_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Regular.ttf")
-font_body_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Thin.ttf")
+current_path = os.path.dirname(__file__)
+font_title_path = os.path.join(current_path, "../Static/Fonts/Starjedi.ttf")
+font_title_2_path = os.path.join(current_path, "../Static/Fonts/Roboto-Bold.ttf")
+font_subtitle_path = os.path.join(current_path, "../Static/Fonts/Roboto-Regular.ttf")
+font_body_path = os.path.join(current_path, "../Static/Fonts/Roboto-Thin.ttf")
 
 
 class Environment:
@@ -80,7 +80,7 @@ class Environment:
         """
         # Mandalorian
         self.mandalorian_icon = pygame.image.load(
-            os.path.join(actual_path, "../Static/Mandalorian.png")
+            os.path.join(current_path, "../Static/Icons/Mandalorian.png")
         )
         self.mandalorian_icon = pygame.transform.scale(
             self.mandalorian_icon,
@@ -95,7 +95,7 @@ class Environment:
 
         # Spaceship
         self.spaceship_icon = pygame.image.load(
-            os.path.join(actual_path, "../Static/Spaceship.png")
+            os.path.join(current_path, "../Static/Icons/Spaceship.png")
         )
         self.spaceship_icon = pygame.transform.scale(
             self.spaceship_icon,
@@ -120,7 +120,7 @@ class Environment:
 
         # Grogu
         self.grogu_icon = pygame.image.load(
-            os.path.join(actual_path, "../Static/Grogu.png")
+            os.path.join(current_path, "../Static/Icons/Grogu.png")
         )
         self.grogu_icon = pygame.transform.scale(
             self.grogu_icon,
@@ -135,7 +135,7 @@ class Environment:
 
         # Mandalorian y Grogu
         self.mandalorian_grogu_icon = pygame.image.load(
-            os.path.join(actual_path, "../Static/Mandalorian_with_grogu.jpg")
+            os.path.join(current_path, "../Static/Icons/Mandalorian_with_grogu.jpg")
         )
         self.mandalorian_grogu_icon = pygame.transform.scale(
             self.mandalorian_grogu_icon,
@@ -150,7 +150,7 @@ class Environment:
 
         # Enemy
         self.enemy_icon = pygame.image.load(
-            os.path.join(actual_path, "../Static/Enemy.png")
+            os.path.join(current_path, "../Static/Icons/Enemy.png")
         )
         self.enemy_icon = pygame.transform.scale(
             self.enemy_icon, (self.rectangle_width * 0.4, self.rectangle_height * 0.7)
@@ -167,20 +167,20 @@ class Environment:
         Carga la música de fondo del juego.
         """
         self.main_theme = pygame.mixer.Sound(
-            os.path.join(actual_path, "../Static/Sounds/main_theme.mp3")
+            os.path.join(current_path, "../Static/Sounds/main_theme.mp3")
         )
 
         self.win_sound = pygame.mixer.Sound(
-            os.path.join(actual_path, "../Static/Sounds/win.mp3")
+            os.path.join(current_path, "../Static/Sounds/win.mp3")
         )
 
         self.spaceship_sound = pygame.mixer.Sound(
-            os.path.join(actual_path, "../Static/Sounds/spaceship.mp3")
+            os.path.join(current_path, "../Static/Sounds/spaceship.mp3")
         )
         self.spaceship_sound_length = int(self.spaceship_sound.get_length())
 
         self.enemy_sound = pygame.mixer.Sound(
-            os.path.join(actual_path, "../Static/Sounds/lightsaber.wav")
+            os.path.join(current_path, "../Static/Sounds/lightsaber.wav")
         )
         self.enemy_sound_length = int(self.enemy_sound.get_length())
 

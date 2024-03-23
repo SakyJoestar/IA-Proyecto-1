@@ -13,7 +13,7 @@
 
     Archivo: BreadthSearch.py
     Intención:
-    Este archivo define la clase BreadthSearch, la cual representa el algoritmo de búsqueda por amplitud.
+    Este archivo define la función execute_breadth_search, la cual representa el algoritmo de búsqueda por amplitud.
     Este algoritmo se encarga de recorrer el árbol de búsqueda de manera horizontal, es decir, expande todos los nodos del nivel actual antes de pasar al siguiente nivel.
     Es un algoritmo completo y encuentra la solución óptima si el costo de las acciones es uniforme, 
     sin embargo, su complejidad en tiempo y espacio es exponencial.
@@ -22,7 +22,7 @@
 from Models import Node
 from Models import Puzzle
 from Models import Position
-import time
+import timeit
 
 
 def execute_breadth_search(file_path: str):
@@ -41,7 +41,7 @@ def execute_breadth_search(file_path: str):
     initial_node = Node(puzzle, initial_position, 0, 0, 0, None, None)
 
     queue_of_nodes.append(initial_node)
-    start_time = time.time()
+    start_time = timeit.default_timer()
 
     while True:
         if index >= len(queue_of_nodes):
@@ -52,7 +52,7 @@ def execute_breadth_search(file_path: str):
         index += 1
 
         if node.is_goal():
-            end_time = time.time()
+            end_time = timeit.default_timer()
             total_time = end_time - start_time
             path = node.get_path_from_root_to_node()
 
