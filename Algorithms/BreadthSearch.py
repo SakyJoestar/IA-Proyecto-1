@@ -58,7 +58,7 @@ def execute_breadth_search(file_path: str):
 
             print("Goal found: ", node.position)
             print("Expanded nodes: ", expanded_nodes)
-            print("Depht: ", node.depth)
+            print("Depth: ", node.depth)
             print("Time of execution (sec): ", total_time)
             print("Cost: ", node.cost)
             print("Path: ")
