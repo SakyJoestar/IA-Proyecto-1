@@ -25,32 +25,18 @@
 from Models.Node import Node
 from Models.Puzzle import Puzzle
 import Models.Position as Position
+from DataStructures import HeuristicHeap
 import timeit
-
-
-def node_of_min_heuristic(queue_of_nodes: list[Node]):
-    """
-    Dada una cola de nodos, devuelve el índice del nodo con la menor heurística.
-    """
-    min_heuristic = queue_of_nodes[0].heuristic
-    min_index = 0
-
-    for i in range(1, len(queue_of_nodes)):
-        if queue_of_nodes[i].heuristic < min_heuristic:
-            min_heuristic = queue_of_nodes[i].heuristic
-            min_index = i
-
-    return min_index
 
 
 def execute_greedy_search(file_path: str):
     """
     Ejecuta el algoritmo de búsqueda greedy.
-    Se basa en una cola de nodos, donde el primer nodo es el nodo raíz (que contiene el estado inicial del juego).
-    Expande el nodo con la menor heurística (cola de prioridad) y agrega los nodos hijos al final de la cola.
+    Se basa en un montículo mín, para siempre contar con el nodo con menor valor de la heurística en la raíz.
+    Al insertar un nodo en el paso de expansión, el heap se encarga de mantener sus propiedades,
+    lo que hace que consultar el nodo con menor valor de la heurística sea una operación muy eficiente.
     """
-    queue_of_nodes = []
-    index = 0
+    queue_of_nodes = HeuristicHeap()
     expanded_nodes = 0
 
     puzzle = Puzzle()
@@ -58,16 +44,15 @@ def execute_greedy_search(file_path: str):
     initial_position = puzzle.initial_position
     initial_node = Node(puzzle, initial_position, 0, 0, 0, None, None)
 
-    queue_of_nodes.append(initial_node)
+    queue_of_nodes.insert(initial_node)
     start_time = timeit.default_timer()
 
     while True:
-        if index >= len(queue_of_nodes):
+        if queue_of_nodes.is_empty():
             print("No solution found")
             break
 
-        index = node_of_min_heuristic(queue_of_nodes)
-        node = queue_of_nodes[index]
+        node = queue_of_nodes.pop()
 
         if node.is_goal():
             end_time = timeit.default_timer()
@@ -76,7 +61,7 @@ def execute_greedy_search(file_path: str):
 
             print("Goal found: ", node.position)
             print("Expanded nodes: ", expanded_nodes)
-            print("Depht: ", node.depth)
+            print("Depth: ", node.depth)
             print("Time of execution (sec): ", total_time)
             print("Cost: ", node.cost)
             print("Path: ")
@@ -89,6 +74,4 @@ def execute_greedy_search(file_path: str):
 
         for action in possible_actions:
             new_node = node.apply_action(action)
-            queue_of_nodes.append(new_node)
-
-        del queue_of_nodes[index]
+            queue_of_nodes.insert(new_node)
