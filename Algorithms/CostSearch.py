@@ -26,7 +26,7 @@ import Models.Position as Position
 import time
 
 
-def node_of_min_cost(queue_of_nodes):
+def node_of_min_cost(queue_of_nodes: list[Node]):
     """
     Dada una cola de nodos, devuelve el índice del nodo con el menor costo acumulado.
     """

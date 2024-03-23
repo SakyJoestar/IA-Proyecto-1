@@ -27,7 +27,7 @@ from Models.Position import Position
 import time
 
 
-def execute_depth_search(file_path):
+def execute_depth_search(file_path: str):
     """
     Ejecuta el algoritmo de búsqueda por profundidad.
     Se basa en una pila de nodos, donde el primer nodo es el nodo raíz (que contiene el estado inicial del juego).
