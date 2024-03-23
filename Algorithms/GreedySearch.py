@@ -19,9 +19,7 @@
     (pasar por posiciones previamente visitadas), entonces se garantiza que el algoritmo es completo.
     A diferencia del algoritmo de búsqueda por profundidad, la solución de este algoritmo no depende del orden de aplicación
     de los operadores, sino que depende exclusivamente de la función heurística utilizada.
-    No obtiene una solución óptima, y su complejidad en tiempo y espacio es exponencial.
-
-    
+    No obtiene una solución óptima y su complejidad en tiempo y espacio es exponencial.  
 """
 
 from Models.Node import Node

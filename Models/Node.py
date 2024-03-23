@@ -45,7 +45,7 @@ class Node(object):
         self.number_of_children = number_of_children
 
     def __str__(self):
-        return f"Posición: {self.position}, combustible: {self.fuel}, costo: {self.cost}, profundidad: {self.depth}, acción: {self.action}"
+        return f"Posición: {self.position}, combustible: {self.fuel}, costo: {self.cost}, heurística: {self.heuristic}, profundidad: {self.depth}, acción: {self.action}"
 
     @staticmethod
     def have_common_previous_position(

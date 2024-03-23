@@ -81,7 +81,7 @@ def execute_astar_search(file_path: str):
             print("Cost: ", node.cost)
             print("Path: ")
             Position.print_list_of_positions(path)
-
+                       
             return (expanded_nodes, node.depth, total_time, node.cost, path)
 
         possible_actions = node.get_possible_actions()

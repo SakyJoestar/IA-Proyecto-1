@@ -19,6 +19,7 @@
 import pygame
 import os
 import sys
+import subprocess
 
 current_path = os.path.dirname(__file__)
 font_title_path = os.path.join(current_path, "../Static/Fonts/Starjedi.ttf")
@@ -55,15 +56,20 @@ class Environment:
             self.rows * self.rectangle_height + self.top_margin + self.bottom_margin
         )
 
+        self.button_width = self.width * 0.1
+        self.button_height = self.top_margin * 0.4
+
         pygame.font.init()
         self.font_title_1 = pygame.font.Font(font_title_path, 32)
         self.font_title_2 = pygame.font.Font(font_title_2_path, 28)
+        self.font_button = pygame.font.Font(font_title_2_path, 14)
         self.font_subtitle = pygame.font.Font(font_subtitle_path, 14)
         self.font_body = pygame.font.Font(font_body_path, 12)
 
         self.background_color = (165, 201, 202)
         self.wall_color = (107, 132, 139)
         self.free_space_color = (255, 255, 255)
+        self.button_color = (107, 132, 139)
 
         self.window = pygame.display.set_mode((self.width, self.height))
         self.window.fill(self.background_color)
@@ -195,6 +201,18 @@ class Environment:
         """
         Ejecuta la animación del juego, según el camino encontrado por el algoritmo previamente ejecutado.
         """
+        self.button = pygame.Rect(self.left_margin - self.button_width * 0.5, self.top_margin * 0.5, self.button_width, self.button_height)
+        self.window.fill(self.button_color, self.button)
+        pygame.draw.rect(self.window, (0, 0, 0), self.button, 1)
+        self.button_text = self.font_button.render("Volver", True, (0, 0, 0))
+        self.window.blit(
+            self.button_text,
+            (
+                self.left_margin - self.button_text.get_width() * 0.5,
+                self.top_margin * 0.5 + self.button_height * 0.3,
+            ),
+        )
+
         for row in range(self.rows):
             for col in range(self.cols):
                 rectangle = pygame.Rect(
@@ -390,6 +408,13 @@ class Environment:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
                 self.end_game()
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.button.collidepoint(event.pos):
+                    pygame.quit()
+                    self = None
+                    subprocess.run(["python", current_path + "/../main.py"])
+                    sys.exit()
 
             # Dibuja el tablero y las estadísticas del algoritmo
             self.draw_board()
@@ -407,6 +432,13 @@ class Environment:
                     event = pygame.event.poll()
                     if event.type == pygame.QUIT:
                         self.end_game()
+                    
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if self.button.collidepoint(event.pos):
+                            pygame.quit()
+                            self = None
+                            subprocess.run(["python", current_path + "/../main.py"])
+                            sys.exit()
 
             # Actualiza la posición del agente en el tablero
             (index, found_spaceship, found_enemy) = self.agent.update_position(
