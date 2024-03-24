@@ -2,16 +2,27 @@ import os
 from Algorithms import *
 from Models import *
 
-from PyQt5.QtWidgets import QMainWindow, QLabel, QRadioButton, QPushButton, QVBoxLayout, QWidget, QFileDialog, QDesktopWidget
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QLabel,
+    QRadioButton,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+    QFileDialog,
+    QDesktopWidget,
+)
 from PyQt5.QtGui import QIcon, QFont, QFontDatabase
-from PyQt5.QtCore import Qt  
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
-actual_path = os.path.dirname(__file__)
-icon = os.path.join(actual_path, "../Static/Grogu.png")
-font_title_path = os.path.join(actual_path, "../Static/Fonts/Starjedi.ttf")
-font_title_2_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Bold.ttf")
-font_subtitle_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Regular.ttf")
-font_body_path = os.path.join(actual_path, "../Static/Fonts/Roboto-Thin.ttf")
+current_path = os.path.dirname(__file__)
+icon = os.path.join(current_path, "../Static/Grogu.png")
+font_title_path = os.path.join(current_path, "../Static/Fonts/Starjedi.ttf")
+font_title_2_path = os.path.join(current_path, "../Static/Fonts/Roboto-Bold.ttf")
+font_subtitle_path = os.path.join(current_path, "../Static/Fonts/Roboto-Regular.ttf")
+font_body_path = os.path.join(current_path, "../Static/Fonts/Roboto-Thin.ttf")
+main_theme = os.path.join(current_path, "../Static/Sounds/main_theme.mp3")
 
 
 class UI(QMainWindow):
@@ -25,7 +36,9 @@ class UI(QMainWindow):
         self.setGeometry(100, 100, 600, 400)
 
         screen = QDesktopWidget().screenGeometry()
-        self.move((screen.width() - self.width()) // 2, (screen.height() - self.height()) // 2)
+        self.move(
+            (screen.width() - self.width()) // 2, (screen.height() - self.height()) // 2
+        )
 
         font_title = self.load_font(font_title_path, 32)
         font_subtitle = self.load_font(font_subtitle_path, 14)
@@ -75,6 +88,11 @@ class UI(QMainWindow):
 
         self.central_widget.setLayout(self.layout)
 
+        self.player = QMediaPlayer()
+        self.player.setMedia(QMediaContent(QUrl.fromLocalFile(main_theme)))
+        self.player.play()
+
+
     def load_font(self, font_path: str, font_size: int):
         font_id = QFontDatabase.addApplicationFont(font_path)
         if font_id != -1:
@@ -83,12 +101,16 @@ class UI(QMainWindow):
             return font
         return None
 
-
-
     def select_file(self):
         file_dialog = QFileDialog(self)
-        file_path, _ = file_dialog.getOpenFileName(self, "Select File", "", "All Files (*)")
-        if file_path and file_path.endswith(".txt") and any(algo.isChecked() for algo in self.algorithm_buttons):
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Select File", "", "All Files (*)"
+        )
+        if (
+            file_path
+            and file_path.endswith(".txt")
+            and any(algo.isChecked() for algo in self.algorithm_buttons)
+        ):
             self.start_button.setEnabled(True)
             self.file_dir = file_path
             filename = os.path.basename(file_path)
@@ -99,7 +121,7 @@ class UI(QMainWindow):
         for i, radio_button in enumerate(self.algorithm_buttons):
             if radio_button.isChecked():
                 selected_algorithm = self.algorithms[i]
-            
+
         if selected_algorithm == "Amplitud":
             return execute_breadth_search(self.file_dir)
         elif selected_algorithm == "Costo":
@@ -110,11 +132,11 @@ class UI(QMainWindow):
             return execute_greedy_search(self.file_dir)
         elif selected_algorithm == "A*":
             return execute_astar_search(self.file_dir)
-        
 
     def start_game(self):
 
         print("Starting game...")
+        self.player.stop()
         self.close()
 
         expanded_nodes, depth, total_time, cost, path = self.select_algorithm()
