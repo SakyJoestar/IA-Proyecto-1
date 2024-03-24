@@ -128,4 +128,4 @@ class Puzzle(object):
         """
         Devuelve el costo heurístico de moverse a una posición en el puzzle.
         """
-        return abs(position.x - self.goal_position.x) + abs(position.y - self.goal_position.y)
+        return (abs(position.x - self.goal_position.x) + abs(position.y - self.goal_position.y))/2
