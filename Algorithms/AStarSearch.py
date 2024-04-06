@@ -25,7 +25,7 @@
 from Models.Node import Node
 from Models.Puzzle import Puzzle
 import Models.Position as Position
-import DataStructures.CostHeap as AHeap
+import DataStructures.AHeap as AHeap
 import timeit
 
 
@@ -51,7 +51,7 @@ def execute_astar_search(file_path: str):
         if queue_of_nodes.is_empty():
             print("No solution found")
             break
-
+        
         node = queue_of_nodes.pop()
 
         if node.is_goal():

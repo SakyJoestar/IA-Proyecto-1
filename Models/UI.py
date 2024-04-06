@@ -90,6 +90,7 @@ class UI(QMainWindow):
 
         self.player = QMediaPlayer()
         self.player.setMedia(QMediaContent(QUrl.fromLocalFile(main_theme)))
+        self.player.setVolume(1)
         self.player.play()
 
 
