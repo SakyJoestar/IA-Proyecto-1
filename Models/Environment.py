@@ -79,6 +79,7 @@ class Environment:
 
         pygame.mixer.init()
         self.upload_music()
+        pygame.mixer.music.set_volume(0.25) # Dominio va de 0.0 a 1.0
 
     def fit_icons(self):
         """
@@ -128,6 +129,7 @@ class Environment:
         self.grogu_icon = pygame.image.load(
             os.path.join(current_path, "../Static/Icons/Grogu.png")
         )
+        pygame.display.set_icon(self.grogu_icon)
         self.grogu_icon = pygame.transform.scale(
             self.grogu_icon,
             (self.rectangle_width * 0.7, self.rectangle_height * 0.7),
