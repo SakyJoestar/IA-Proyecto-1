@@ -9,7 +9,7 @@ Inteligencia Artificial - Escuela de Ingeniería de Sistemas y Computación
 - Nicolas Herrera - 2182551 [@Herreran903](https://github.com/Herreran903)
 - Samuel Galindo - 2177491 [@SakyJoestar](https://github.com/SakyJoestar)
 - Christian Vargas - 2179172 [@ChristianV2426](https://github.com/ChristianV2426)
-- Jhon Belalcazar - [@JohnFredd](https://github.com/JohnFredd)
+- Jhon Belalcazar - 2182464 [@JohnFredd](https://github.com/JohnFredd)
 
 ## Smart Mandalorian
 
@@ -17,7 +17,7 @@ Inteligencia Artificial - Escuela de Ingeniería de Sistemas y Computación
 
 El objetivo de Mando es encontrar a Grogu en un espacio de 10x10 casillas usando algoritmos de inteligencia artificial. En el ambiente se tiene una nave que Mando puede usar para ir más rápido. También hay enemigos que afectan el estado del agente. Considere la siguiente abstracción del mundo representado por medio de una cuadrícula de 10x10.
 
-![Ejemplo #2](/example1.png "Ejemplo #1")
+![Ejemplo #2](./Static/examples/example1.png "Ejemplo #1")
 
 En cada búsqueda que emprenda el agente podrá realizar desplazamientos simples tales como moverse arriba, abajo, izquierda, y derecha. Tenga en cuenta que el costo de cada movimiento es 1. Si Mando va en la nave, el costo de cada movimiento será 1/2 y además podrá pasar por las casillas donde haya enemigos sin que lo afecten. La nave solo tiene combustible para 10 casillas. Si Mando llega a una casilla donde hay un enemigo y no va en la nave, el costo será 5 (allí está incluido el costo del movimiento y del daño ocasionado por el enemigo). En el ambiente siempre hay una sola nave, pero la cantidad de enemigos puede variar.
 
@@ -32,7 +32,7 @@ La información del mundo se representa por medio de los siguientes números:
 
 Por ejemplo, el mundo mostrado en la figura se representa mediante la matriz:
 
-![Ejemplo #2](/example2.png "Ejemplo #2")
+![Ejemplo #2](./Static/examples/example2.png "Ejemplo #2")
 
 ### El Proyecto
 

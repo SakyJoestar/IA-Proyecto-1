@@ -59,21 +59,11 @@ def execute_depth_search(file_path: str):
             break
 
         node = stack_of_nodes.pop()
-        expanded_nodes += 1
 
         if node.is_goal():
             end_time = timeit.default_timer()
             total_time = end_time - start_time
             path = node.get_path_from_root_to_node()
-
-            print("Goal found: ", node.position)
-            print("Expanded nodes: ", expanded_nodes)
-            print("Depth: ", node.depth)
-            print("Time of execution (sec): ", total_time)
-            print("Cost: ", node.cost)
-            print("Path: ")
-            Position.print_list_of_positions(path)
-
             return (expanded_nodes, node.depth, total_time, node.cost, path)
 
         possible_actions = node.get_possible_actions()

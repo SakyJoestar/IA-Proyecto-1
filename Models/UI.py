@@ -1,3 +1,21 @@
+"""
+    Inteligencia Artificial - 750022C 01
+    Proyecto I - Smart Mandalorian
+
+    Autores: 
+    John Freddy Belalcázar Rojas - 2182464
+    Samuel Galindo Cuevas - 2177491
+    Nicolás Herrera Marulanda - 2182551
+    Christian David Vargas Gutiérrez - 2179172
+
+    Profesor:
+    Oscar Bedoya PhD
+
+    Archivo: UI.py
+    Intención:
+    Este archivo define la clase UI, la cual se encarga de definir la interfaz gráfica. 
+"""
+
 import os
 from Algorithms import *
 from Models import *
@@ -17,7 +35,7 @@ from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
 current_path = os.path.dirname(__file__)
-icon = os.path.join(current_path, "../Static/Grogu.png")
+icon = os.path.join(current_path, "../Static/Icons/Grogu.png")
 font_title_path = os.path.join(current_path, "../Static/Fonts/Starjedi.ttf")
 font_title_2_path = os.path.join(current_path, "../Static/Fonts/Roboto-Bold.ttf")
 font_subtitle_path = os.path.join(current_path, "../Static/Fonts/Roboto-Regular.ttf")
@@ -90,9 +108,8 @@ class UI(QMainWindow):
 
         self.player = QMediaPlayer()
         self.player.setMedia(QMediaContent(QUrl.fromLocalFile(main_theme)))
-        self.player.setVolume(1)
+        self.player.setVolume(50) # Dominio va de 0 a 100
         self.player.play()
-
 
     def load_font(self, font_path: str, font_size: int):
         font_id = QFontDatabase.addApplicationFont(font_path)
