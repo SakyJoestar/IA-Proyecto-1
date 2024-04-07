@@ -127,7 +127,7 @@ class Puzzle(object):
     def heuristic(self, position: Position) -> float:
         """
         Devuelve el costo heurístico de moverse a una posición en el puzzle.
-        La heuristica es la distancia de Manhattan entre la posición actual y la posición objetivo entre 2 ya que suponemos que siempre está en la nave, pero si la distancia es mayor a 10 (potencia de la nave) se tomarán las primeras 10 casillas con costo de 0.5 y el resto con costo 1.
+        La heuristica es la distancia en L entre la posición actual y la posición objetivo entre 2 ya que suponemos que siempre está en la nave, pero si la distancia es mayor a 10 (potencia de la nave) se tomarán las primeras 10 casillas con costo de 0.5 y el resto con costo 1.
         """
         Dl = abs(position.x - self.goal_position.x) + abs(position.y - self.goal_position.y)
         if Dl <= 10:
